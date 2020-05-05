@@ -94,10 +94,10 @@ chown -R root: $final_path
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
+#ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
 
 # Define and install dependencies
-ynh_install_app_dependencies $pkg_dependencies
+#ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # RESTORE THE MYSQL DATABASE
@@ -146,9 +146,10 @@ yunohost service add $app --description "A short description of the app" --log "
 #=================================================
 # RELOAD NGINX AND PHP-FPM
 #=================================================
-ynh_script_progression --message="Reloading nginx web server and php-fpm..." --time --weight=1
+#ynh_script_progression --message="Reloading nginx web server and php-fpm..." --time --weight=1
+ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
 
-ynh_systemd_action --service_name=php7.0-fpm --action=reload
+#ynh_systemd_action --service_name=php7.0-fpm --action=reload
 ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
