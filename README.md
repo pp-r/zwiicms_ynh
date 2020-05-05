@@ -10,18 +10,17 @@ Usage of this package (REMOVE THIS SECTION BEFORE RELEASE)
 
 # ZwiiCMS for YunoHost
 
-
-Integration level
-Install ZwiiCMS with YunoHost
+    Integration level
+    Install ZwiiCMS with YunoHost
 
 Lire ce readme en français.
 
-    > *This package allow you to install ZwiiCMS quickly and simply on a YunoHost server.
+    > *This package allow you to install ZwiiCMS quickly and simply on a YunoHost server.*
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
     
 Overview
 
-[ZwiiCMS](https://zwiicms.com) Zwii - the simple, lightweight, database-free (Flat-File), scalable and responsive CMS!
+[ZwiiCMS](https://zwiicms.com) - the simple, lightweight, database-free (Flat-File), scalable and responsive CMS!
 A CMS to easily create and manage your website without any programming knowledge.
 
 
@@ -29,7 +28,7 @@ Shipped version: 9.2.27
 
 ## Screenshots
 
-![Official demo](Link to a demo site for this app)
+    ![Official demo](Link to a demo site for this app)
 
 ## Demo
 
@@ -80,6 +79,6 @@ Only if you want to use a alpha branch for coding, instead of merging directly i
 
 To try the alpha branch, please proceed like that.
 
-sudo yunohost app install https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
-or
-sudo yunohost app upgrade zwiicms -u https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
+    sudo yunohost app install https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
+    or
+    sudo yunohost app upgrade zwiicms -u https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
