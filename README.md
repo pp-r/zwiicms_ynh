@@ -22,7 +22,7 @@ Overview
 
 Quick description of this app.
 
-Shipped version: 9.2.28
+Shipped version: 9.2.27
 Screenshots
 
 ![](Link to an screenshot for this app)
