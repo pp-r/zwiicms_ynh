@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="php7.0-zip"
+#pkg_dependencies="php7.0-zip deb1 deb2"
 
 #=================================================
 # PERSONAL HELPERS
