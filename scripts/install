@@ -269,8 +269,7 @@ ynh_add_fpm_config
 ### that really need such authorization.
 
 # Set permissions to app files
-#chown -R $app: $final_path
-chown -R www-data:$app $final_path
+chown -R $app: $final_path
 
 #=================================================
 # SETUP LOGROTATE
