@@ -127,18 +127,18 @@ ynh_add_nginx_config
 #=================================================
 # CREATE DEDICATED USER
 #=================================================
-#ynh_script_progression --message="Making sure dedicated system user exists..." --time --weight=1
+ynh_script_progression --message="Making sure dedicated system user exists..." --time --weight=1
 
 # Create a dedicated user (if not existing)
-#ynh_system_user_create --username=$app
+ynh_system_user_create --username=$app
 
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-#ynh_script_progression --message="Upgrading php-fpm configuration..." --time --weight=1
+ynh_script_progression --message="Upgrading php-fpm configuration..." --time --weight=1
 
 # Create a dedicated php-fpm config
-#ynh_add_fpm_config
+ynh_add_fpm_config
 
 #=================================================
 # SPECIFIC UPGRADE
@@ -152,9 +152,9 @@ ynh_add_nginx_config
 
 ### Verify the checksum of a file, stored by `ynh_store_file_checksum` in the install script.
 ### And create a backup of this file if the checksum is different. So the file will be backed up if the admin had modified it.
-ynh_backup_if_checksum_is_different --file="$final_path/CONFIG_FILE"
+#ynh_backup_if_checksum_is_different --file="$final_path/CONFIG_FILE"
 # Recalculate and store the checksum of the file for the next upgrade.
-ynh_store_file_checksum --file="$final_path/CONFIG_FILE"
+#ynh_store_file_checksum --file="$final_path/CONFIG_FILE"
 
 #=================================================
 # SETUP LOGROTATE
@@ -187,7 +187,7 @@ ynh_store_file_checksum --file="$final_path/CONFIG_FILE"
 #=================================================
 
 # Set permissions on app files
-chown -R root: $final_path
+chown -R $app: $final_path
 
 #=================================================
 # SETUP SSOWAT
