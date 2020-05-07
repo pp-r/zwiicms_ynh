@@ -166,7 +166,7 @@ ynh_add_nginx_config
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
+#ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
 
 ### `ynh_add_fpm_config` is used to set up a PHP config.
 ### You can remove it if your app doesn't use PHP.
@@ -180,7 +180,7 @@ ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
 ###		- And the section "PHP-FPM CONFIGURATION" in the upgrade script
 
 # Create a dedicated php-fpm config
-ynh_add_fpm_config
+#ynh_add_fpm_config
 
 #=================================================
 # SPECIFIC SETUP
