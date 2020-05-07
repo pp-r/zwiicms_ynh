@@ -270,7 +270,7 @@ ynh_add_fpm_config
 
 # Set permissions to app files
 #chown -R $app: $final_path
-chown -R root:www-data $final_path
+chown -R www-data: $final_path
 
 #=================================================
 # SETUP LOGROTATE
