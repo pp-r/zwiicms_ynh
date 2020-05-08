@@ -328,10 +328,17 @@ chown -R $app: $final_path
 #=================================================
 # SETUP FAIL2BAN
 #=================================================
-#ynh_script_progression --message="Configuring fail2ban..." --time --weight=1
+ynh_script_progression --message="Configuring fail2ban..." --time --weight=1
+
+# Create the log file is not already existing during install
+mkdir -p "/var/www/$app/var/logs/"
+touch "/var/www/$app/var/logs/prod.log"
+chown $app: "/var/www/$app/var/logs/prod.log"
 
 # Create a dedicated fail2ban config
 #ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
+
+ynh_add_fail2ban_config --logpath="/var/www/$app/var/logs/prod.log" --failregex='app.ERROR: Authentication failure for user "([\w]+)?", from IP "<HOST>"' --max_retry=5
 
 #=================================================
 # SETUP SSOWAT
