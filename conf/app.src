@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/fredtempez/ZwiiCMS/archive/9.2.27.zip
-SOURCE_SUM=49d245c53f0613b5a6929c976729c0f05cd72c8611a0525b73fbf3c8b0ccf3d1
+SOURCE_URL=https://github.com/fredtempez/ZwiiCMS/archive/9.2.28.zip
+SOURCE_SUM=d0b9af9c7fca43cca25daa304cffa8838a997bd989ff216fd05ef81221b42364
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
 SOURCE_IN_SUBDIR=true
