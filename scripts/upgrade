@@ -120,9 +120,9 @@ ynh_add_nginx_config
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-#ynh_script_progression --message="Upgrading dependencies..." --time --weight=1
+ynh_script_progression --message="Upgrading dependencies..." --time --weight=1
 
-#ynh_install_app_dependencies $pkg_dependencies
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # CREATE DEDICATED USER
@@ -177,10 +177,10 @@ ynh_add_fpm_config
 #=================================================
 # UPGRADE FAIL2BAN
 #=================================================
-#ynh_script_progression --message="Reconfiguring fail2ban..." --time --weight=1
+ynh_script_progression --message="Reconfiguring fail2ban..." --time --weight=1
 
 # Create a dedicated fail2ban config
-#ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
+ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
 
 #=================================================
 # SECURE FILES AND DIRECTORIES
