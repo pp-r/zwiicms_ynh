@@ -95,10 +95,10 @@ ynh_systemd_action --action=reload --service_name=fail2ban # Reload instead of r
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
-#ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
+ynh_script_progression --message="Reinstalling dependencies..." --time --weight=1
 
 # Define and install dependencies
-#ynh_install_app_dependencies $pkg_dependencies
+ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # RESTORE THE MYSQL DATABASE
