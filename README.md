@@ -65,10 +65,10 @@ Links
 Developers info
 ----------------
 
-Only if you want to use a alpha branch for coding, instead of merging directly into master. Please do your pull request to the alpha branch.
+Only if you want to use a testing branch for coding, instead of merging directly into master. Please do your pull request to the testing branch.
 
-To try the alpha branch, please proceed like that.
+To try the testing branch, please proceed like that.
 
-    sudo yunohost app install https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
+    sudo yunohost app install https://github.com/pp-r/zwiicms_ynh/tree/testing --debug
     or
-    sudo yunohost app upgrade zwiicms -u https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
+    sudo yunohost app upgrade zwiicms -u https://github.com/pp-r/zwiicms_ynh/tree/testing --debug
