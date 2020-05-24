@@ -65,10 +65,10 @@ Liens
 Informations sur les développeurs
 ----------------
 
-Seulement si vous voulez utiliser la branche testing plutôt que la banche stable (master).
+Seulement si vous voulez utiliser la branche alpha plutôt que la banche stable (master).
 
 Pour essayer la branche testing, veuillez procéder ainsi :
 
-    sudo yunohost app install https://github.com/pp-r/zwiicms_ynh/tree/testing --debug
+    sudo yunohost app install https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
     or
-    sudo yunohost app upgrade zwiicms -u https://github.com/pp-r/zwiicms_ynh/tree/testing --debug
+    sudo yunohost app upgrade zwiicms -u https://github.com/pp-r/zwiicms_ynh/tree/alpha --debug
