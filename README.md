@@ -1,13 +1,3 @@
-Usage of this package (REMOVE THIS SECTION BEFORE RELEASE)
-
-    Copy this app before working on it.
-    Edit conf/nginx.conf file to match application prerequisites.
-    Edit manifest.json with application specific information.
-    Edit the install, upgrade, remove, backup, and restore scripts.
-        Using the script helpers documentation.
-    Add a LICENSE file for the package.
-    Edit README.md and README_fr.md.
-
 # ZwiiCMS for YunoHost
 
     Integration level
