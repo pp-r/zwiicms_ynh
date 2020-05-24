@@ -3,7 +3,7 @@
     Integration level
     Install ZwiiCMS with YunoHost
 
-Lire ce readme en français.
+Lire ce readme en français : https://github.com/pp-r/zwiicms_ynh/blob/alpha/README_fr.
 
     > *This package allow you to install ZwiiCMS quickly and simply on a YunoHost server.*
 If you don't have YunoHost, please see [here](https://yunohost.org/#/install) to know how to install and enjoy it.*
@@ -18,11 +18,11 @@ Shipped version: 9.2.27
 
 ## Screenshots
 
-    ![Official demo](Link to a demo site for this app)
+    ![Official demo](https://zwiicms.com/portfolio)
 
 ## Demo
 
-    [Official demo](Link to a demo site for this app)
+    [Official demo](https://zwiicms.com/demo-live)
 
 ## Configuration
 
@@ -56,8 +56,8 @@ https://yunohost.org/packaging_apps
 Links
 
     Report a bug: https://github.com/USER/zwiicms_ynh/issues
-    App website: Link to the official website of this app
-    Upstream app repository: Link to the official repository of the upstream app
+    App website: https://zwiicms.com/
+    Upstream app repository: https://github.com/fredtempez/ZwiiCMS
     YunoHost website: https://yunohost.org/
 
 ---
