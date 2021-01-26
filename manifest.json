@@ -11,10 +11,10 @@
     "license": "GPL-3.0",
     "maintainer": {
         "name": "pp-r",
-        "email": "ppr@ppr.ynh.fr"
+        "email": "cippr@cippr.ynh.fr"
     },
     "requirements": {
-        "yunohost": ">= 3.7"
+        "yunohost": ">= 3.8"
     },
     "multi_instance": false,
     "services": [
