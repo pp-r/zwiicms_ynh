@@ -56,7 +56,7 @@ app=$YNH_APP_INSTANCE_NAME
 ### The execution time is given for the duration since the previous call. So the weight should be applied to this previous call.
 ynh_script_progression --message="Validating installation parameters..." --time --weight=1
 
-### If the app uses nginx as web server (written in HTML/PHP in most cases), the final path should be "/var/www/$app".
+### If the app uses NGINX as web server (written in HTML/PHP in most cases), the final path should be "/var/www/$app".
 ### If the app provides an internal web server (or uses another application server such as uwsgi), the final path should be "/opt/yunohost/$app"
 final_path=/var/www/$app
 test ! -e "$final_path" || ynh_die --message="This path already contains a folder"
@@ -72,7 +72,6 @@ ynh_script_progression --message="Storing installation settings..." --time --wei
 ynh_app_setting_set --app=$app --key=domain --value=$domain
 ynh_app_setting_set --app=$app --key=path --value=$path_url
 #ynh_app_setting_set --app=$app --key=admin --value=$admin
-ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 #ynh_app_setting_set --app=$app --key=language --value=$language
 
 #=================================================
@@ -96,6 +95,7 @@ ynh_app_setting_set --app=$app --key=is_public --value=$is_public
 # If you do this and the app doesn't actually need you are CREATING SECURITY HOLES IN THE SERVER !)
 
 # Open the port
+# ynh_script_progression --message="Configuring firewall..." --time --weight=1
 # ynh_exec_warn_less yunohost firewall allow --no-upnp TCP $port
 
 #=================================================
@@ -166,7 +166,7 @@ ynh_system_user_create --username=$app
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
+ynh_script_progression --message="Configuring PHP-FPM..." --time --weight=1
 
 ### `ynh_add_fpm_config` is used to set up a PHP config.
 ### You can remove it if your app doesn't use PHP.
@@ -179,7 +179,7 @@ ynh_script_progression --message="Configuring php-fpm..." --time --weight=1
 ###		With the reload at the end of the script.
 ###		- And the section "PHP-FPM CONFIGURATION" in the upgrade script
 
-# Create a dedicated php-fpm config
+# Create a dedicated PHP-FPM config
 ynh_add_fpm_config
 
 #=================================================
@@ -221,11 +221,12 @@ ynh_add_fpm_config
 
 # Set the app as temporarily public for curl call
 #ynh_script_progression --message="Configuring SSOwat..." --time --weight=1
-#ynh_app_setting_set --app=$app --key=skipped_uris --value="/"
+# Making the app public for curl
+#ynh_permission_update --permission="main" --add="visitors"
 # Reload SSOwat config
 #yunohost app ssowatconf
 
-# Reload Nginx
+# Reload NGINX
 #ynh_systemd_action --service_name=nginx --action=reload
 
 # Installation with curl
@@ -233,10 +234,7 @@ ynh_add_fpm_config
 #ynh_local_curl "/INSTALL_PATH" "key1=value1" "key2=value2" "key3=value3"
 
 # Remove the public access
-#if [ $is_public -eq 0 ]
-#then
-#	ynh_app_setting_delete --app=$app --key=skipped_uris
-#fi
+ynh_permission_update --permission="main" --remove="visitors"
 
 #=================================================
 # MODIFY A CONFIG FILE
@@ -268,7 +266,7 @@ ynh_add_fpm_config
 ### Then, if write authorization is needed, any access should be given only to directories
 ### that really need such authorization.
 
-# Set permissions to app files
+# Set permissions to app files chown -R root: $final_path
 chown -R $app: $final_path
 
 #=================================================
@@ -291,23 +289,34 @@ chown -R $app: $final_path
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 
+#ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
+
 ### `yunohost service add` integrates a service in YunoHost. It then gets 
 ### displayed in the admin interface and through the others `yunohost service` commands.
-### (N.B. : this line only makes sense if the app adds a service to the system!)
+### (N.B.: this line only makes sense if the app adds a service to the system!)
 ### If you're not using these lines:
 ###		- You can remove these files in conf/.
-###		- Remove the section "REMOVE SERVICE FROM ADMIN PANEL" in the remove script
-###		- As well as the section "ADVERTISE SERVICE IN ADMIN PANEL" in the restore script
+###		- Remove the section "REMOVE SERVICE INTEGRATION IN YUNOHOST" in the remove script
+###		- As well as the section "INTEGRATE SERVICE IN YUNOHOST" in the restore script
+###		- And the section "INTEGRATE SERVICE IN YUNOHOST" in the upgrade script
 
-#yunohost service add $app --description "A short description of the app" --log "/var/log/$app/$app.log"
+#yunohost service add $app --description="A short description of the app" --log="/var/log/$app/$app.log"
 
-### With YunoHost 3.8 you will then be able to: 
-### - specify a list of ports that needs to be publicly exposed (c.f. --needs_exposed_ports) 
-###   which will then be checked by YunoHost's diagnosis system
-### - specify a custom command to check the status of the service (c.f. --test_status)
-###   though it's only needed for weird cases where 'systemctl status' doesn't do a good job
-### - specify a custom command to check / validate the configuration of the service (c.f. --test_conf)
-###   for example, the command to check the configuration of nginx is "nginx -t"
+### Additional options starting with 3.8:
+###
+### --needs_exposed_ports "$port" a list of ports that needs to be publicly exposed
+###                               which will then be checked by YunoHost's diagnosis system
+###                               (N.B. DO NOT USE THIS is the port is only internal!!!)
+###
+### --test_status "some command"  a custom command to check the status of the service
+###                               (only relevant if 'systemctl status' doesn't do a good job)
+###
+### --test_conf "some command"    some command similar to "nginx -t" that validates the conf of the service
+###
+### Re-calling 'yunohost service add' during the upgrade script is the right way
+### to proceed if you later realize that you need to enable some flags that
+### weren't enabled on old installs (be careful it'll override the existing
+### service though so you should re-provide all relevant flags when doing so)
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -330,15 +339,8 @@ chown -R $app: $final_path
 #=================================================
 #ynh_script_progression --message="Configuring fail2ban..." --time --weight=1
 
-# Create the log file is not already existing during install
-#mkdir -p "/var/www/$app/var/logs/"
-#touch "/var/www/$app/var/logs/prod.log"
-#chown $app: "/var/www/$app/var/logs/prod.log"
-
-# Create a dedicated fail2ban config
+# Create a dedicated Fail2Ban config
 #ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
-
-#ynh_add_fail2ban_config --logpath="/var/www/$app/var/logs/prod.log" --failregex='app.ERROR: Authentication failure for user "([\w]+)?", from IP "<HOST>"' --max_retry=5
 
 #=================================================
 # SETUP SSOWAT
@@ -348,9 +350,18 @@ ynh_script_progression --message="Configuring SSOwat..." --time --weight=1
 # Make app public if necessary
 if [ $is_public -eq 1 ]
 then
-	# unprotected_uris allows SSO credentials to be passed anyway.
-	ynh_app_setting_set --app=$app --key=unprotected_uris --value="/"
+	# Everyone can access the app.
+	# The "main" permission is automatically created before the install script.
+	ynh_permission_update --permission="main" --add="visitors"
 fi
+
+# Only the admin can access the admin panel of the app (if the app has an admin panel)
+#ynh_permission_create --permission="admin" --url="/admin" --allowed=$admin
+
+# Everyone can access to the api part
+# We don't want to display the tile in the sso so we put --show_tile="false"
+# And we don't want that the YunoHost Admin can remove visitors group to this permission, so we put --protected="true"
+#ynh_permission_create --permission="api" --url "/api" --allowed="visitors" --show_tile="false" --protected="true"
 
 #=================================================
 # RELOAD NGINX

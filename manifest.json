@@ -6,15 +6,16 @@
         "en": "Zwii - the simple, lightweight, database-free (Flat-File), scalable and responsive CMS!",
         "fr": "Zwii - le CMS simple, léger, sans base de données (Flat-File), modulable et responsive !"
     },
-    "version": "10.3.11~ynh1",
+  
+    "version": "10.4.02~ynh1",    
     "url": "https://zwiicms.com",
     "license": "GPL-3.0",
     "maintainer": {
         "name": "pp-r",
-        "email": "ppr@ppr.ynh.fr"
+        "email": "cippr@cippr.ynh.fr"
     },
     "requirements": {
-        "yunohost": ">= 3.7"
+        "yunohost": ">= 4.1.3"
     },
     "multi_instance": false,
     "services": [

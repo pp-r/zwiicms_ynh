@@ -19,7 +19,6 @@ app=$YNH_APP_INSTANCE_NAME
 domain=$(ynh_app_setting_get --app=$app --key=domain)
 path_url=$(ynh_app_setting_get --app=$app --key=path)
 #admin=$(ynh_app_setting_get --app=$app --key=admin)
-is_public=$(ynh_app_setting_get --app=$app --key=is_public)
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 #language=$(ynh_app_setting_get --app=$app --key=language)
 #db_name=$(ynh_app_setting_get --app=$app --key=db_name)
@@ -41,14 +40,11 @@ upgrade_type=$(ynh_check_app_version_changed)
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --time --weight=1
 
-# Fix is_public as a boolean value
-if [ "$is_public" = "Yes" ]; then
-	ynh_app_setting_set --app=$app --key=is_public --value=1
-	is_public=1
-elif [ "$is_public" = "No" ]; then
-	ynh_app_setting_set --app=$app --key=is_public --value=0
-	is_public=0
-fi
+#
+# N.B. : the followings setting migrations snippets are provided as *EXAMPLES*
+# of what you may want to do in some cases (e.g. a setting was not defined on
+# some legacy installs and you therefore want to initiaze stuff during upgrade)
+#
 
 # If db_name doesn't exist, create it
 #if [ -z "$db_name" ]; then
@@ -57,9 +53,29 @@ fi
 #fi
 
 # If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/var/www/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+#if [ -z "$final_path" ]; then
+#	final_path=/var/www/$app
+#	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+#fi
+
+### If nobody installed your app before 4.1,
+### then you may safely remove these lines
+
+# Cleaning legacy permissions
+if ynh_legacy_permissions_exists; then
+	ynh_legacy_permissions_delete_all
+
+	ynh_app_setting_delete --app=$app --key=is_public
+fi
+
+if ! ynh_permission_exists --permission="admin"; then
+	# Create the required permissions
+	ynh_permission_create --permission="admin" --url="/admin" --allowed=$admin
+fi
+
+# Create a permission if needed
+if ! ynh_permission_exists --permission="api"; then
+	ynh_permission_create --permission="api" --url "/api" --allowed="visitors" --show_tile="false" --protected="true"
 fi
 
 #=================================================
@@ -75,18 +91,6 @@ ynh_clean_setup () {
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
-
-#=================================================
-# CHECK THE PATH
-#=================================================
-
-# Normalize the URL path syntax
-# N.B. : this is for app installations before YunoHost 2.7
-# where this value might be something like /foo/ or foo/
-# instead of /foo ....
-# If nobody installed your app before 2.7, then you may
-# safely remove this line
-path_url=$(ynh_normalize_url_path --path_url=$path_url)
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -112,7 +116,7 @@ fi
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading nginx web server configuration..." --time --weight=1
+ynh_script_progression --message="Upgrading NGINX web server configuration..." --time --weight=1
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -135,7 +139,7 @@ ynh_system_user_create --username=$app
 #=================================================
 # PHP-FPM CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading php-fpm configuration..." --time --weight=1
+ynh_script_progression --message="Upgrading PHP-FPM configuration..." --time --weight=1
 
 # Create a dedicated php-fpm config
 ynh_add_fpm_config
@@ -147,14 +151,34 @@ ynh_add_fpm_config
 #=================================================
 
 #=================================================
-# STORE THE CONFIG FILE CHECKSUM
+# SETUP SYSTEMD
+#=================================================
+ynh_script_progression --message="Upgrading systemd configuration..." --time --weight=1
+
+# Create a dedicated systemd config
+ynh_add_systemd_config
+
+#=================================================
+# MODIFY A CONFIG FILE
 #=================================================
 
 ### Verify the checksum of a file, stored by `ynh_store_file_checksum` in the install script.
 ### And create a backup of this file if the checksum is different. So the file will be backed up if the admin had modified it.
-#ynh_backup_if_checksum_is_different --file="$final_path/CONFIG_FILE"
+ynh_backup_if_checksum_is_different --file="$final_path/CONFIG_FILE"
+
+ynh_replace_string --match_string="match_string" --replace_string="replace_string" --target_file="$final_path/CONFIG_FILE"
+
 # Recalculate and store the checksum of the file for the next upgrade.
-#ynh_store_file_checksum --file="$final_path/CONFIG_FILE"
+ynh_store_file_checksum --file="$final_path/CONFIG_FILE"
+
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
+# SECURE FILES AND DIRECTORIES
+#=================================================
+
+# Set permissions on app files chown -R root: $final_path
+chown -R $app: $final_path
 
 #=================================================
 # SETUP LOGROTATE
@@ -165,41 +189,11 @@ ynh_add_fpm_config
 #ynh_use_logrotate --non-append
 
 #=================================================
-# SETUP SYSTEMD
+# INTEGRATE SERVICE IN YUNOHOST
 #=================================================
-#ynh_script_progression --message="Upgrading systemd configuration..." --time --weight=1
+#ynh_script_progression --message="Integrating service in YunoHost..." --time --weight=1
 
-# Create a dedicated systemd config
-#ynh_add_systemd_config
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# UPGRADE FAIL2BAN
-#=================================================
-#ynh_script_progression --message="Reconfiguring fail2ban..." --time --weight=1
-
-# Create a dedicated fail2ban config
-#ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
-
-#=================================================
-# SECURE FILES AND DIRECTORIES
-#=================================================
-
-# Set permissions on app files
-chown -R $app: $final_path
-
-#=================================================
-# SETUP SSOWAT
-#=================================================
-ynh_script_progression --message="Upgrading SSOwat configuration..." --time --weight=1
-
-# Make app public if necessary
-if [ $is_public -eq 1 ]
-then
-	# unprotected_uris allows SSO credentials to be passed anyway
-	ynh_app_setting_set --app=$app --key=unprotected_uris --value="/"
-fi
+#yunohost service add $app --description="A short description of the app" --log="/var/log/$app/$app.log"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -209,9 +203,17 @@ fi
 #ynh_systemd_action --service_name=$app --action="start" --log_path="/var/log/$app/$app.log"
 
 #=================================================
+# UPGRADE FAIL2BAN
+#=================================================
+#ynh_script_progression --message="Reconfiguring Fail2Ban..." --time --weight=1
+
+# Create a dedicated Fail2Ban config
+#ynh_add_fail2ban_config --logpath="/var/log/nginx/${domain}-error.log" --failregex="Regex to match into the log for a failed login"
+
+#=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
+ynh_script_progression --message="Reloading NGINX web server..." --time --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
 

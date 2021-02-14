@@ -5,7 +5,8 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="php7.0-zip"
+
+pkg_dependencies="php$YNH_DEFAULT_PHP_VERSION-zip"
 
 #=================================================
 # PERSONAL HELPERS
