@@ -27,7 +27,7 @@ ynh_abort_if_errors
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
 #admin=$YNH_APP_ARG_ADMIN
-#is_public=$YNH_APP_ARG_IS_PUBLIC
+is_public=$YNH_APP_ARG_IS_PUBLIC
 #language=$YNH_APP_ARG_LANGUAGE
 #password=$YNH_APP_ARG_PASSWORD
 
@@ -266,8 +266,8 @@ ynh_permission_update --permission="main" --remove="visitors"
 ### Then, if write authorization is needed, any access should be given only to directories
 ### that really need such authorization.
 
-# Set permissions to app files chown -R $app: $final_path
-chown -R root: $final_path
+# Set permissions to app files chown -R root: $final_path
+chown -R $app: $final_path
 
 #=================================================
 # SETUP LOGROTATE
