@@ -18,8 +18,7 @@
     },
     "multi_instance": false,
     "services": [
-        "nginx",
-        "php7.3-fpm"
+        "nginx"
     ],
     "arguments": {
         "install" : [
