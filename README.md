@@ -14,7 +14,7 @@ Overview
 A CMS to easily create and manage your website without any programming knowledge.
 
 
-Shipped version: 10.3.11
+Shipped version: 10.4.02
 
 ## Screenshots
 
@@ -57,7 +57,7 @@ Links
 
     Report a bug: https://github.com/USER/zwiicms_ynh/issues
     App website: https://zwiicms.com/
-    Upstream app repository: https://github.com/fredtempez/ZwiiCMS
+    Upstream app repository: https://forge.chapril.org/ZwiiCMS-Team/ZwiiCMS
     YunoHost website: https://yunohost.org/
 
 ---
