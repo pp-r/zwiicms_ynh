@@ -177,8 +177,8 @@ ynh_store_file_checksum --file="$final_path/CONFIG_FILE"
 # SECURE FILES AND DIRECTORIES
 #=================================================
 
-# Set permissions on app files chown -R $app: $final_path
-chown -R root: $final_path
+# Set permissions on app files chown -R root: $final_path
+chown -R $app: $final_path
 
 #=================================================
 # SETUP LOGROTATE
