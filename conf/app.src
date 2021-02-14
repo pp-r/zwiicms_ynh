@@ -1,4 +1,4 @@
-SOURCE_URL=https://github.com/fredtempez/ZwiiCMS/archive/10.3.12.zip
+SOURCE_URL=https://forge.chapril.org/ZwiiCMS-Team/ZwiiCMS/archive/10.3.12.zip
 SOURCE_SUM=0908b5ef9caa5bc412eeda24dd6d985d5c0705b2e037f0b6b7665ba933e1c5c5
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=zip
