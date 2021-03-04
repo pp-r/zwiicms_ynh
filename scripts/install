@@ -229,10 +229,6 @@ ynh_add_fpm_config
 # Reload NGINX
 #ynh_systemd_action --service_name=nginx --action=reload
 
-firstname=$(ynh_user_get_info --username=$admin --key=firstname)
-lastname=$(ynh_user_get_info --username=$admin --key=lastname)
-email=$(ynh_user_get_info --username=$admin --key=mail)
-
 # Installation with curl
 #ynh_script_progression --message="Finalizing installation..." --time --weight=1
 #ynh_local_curl "/INSTALL_PATH" "key1=value1" "key2=value2" "key3=value3"
@@ -373,6 +369,15 @@ fi
 ynh_script_progression --message="Reloading nginx web server..." --time --weight=1
 
 ynh_systemd_action --service_name=nginx --action=reload
+
+installId=$YNH_APP_ARG_ADMIN
+installPassword=$YNH_APP_ARG_PASSWORD
+installConfirmPassword=$YNH_APP_ARG_PASSWORD
+installMail=$(ynh_user_get_info --username=$admin --key=mail)
+installFirstname=$(ynh_user_get_info --username=$admin --key=firstname)
+installLastname=$(ynh_user_get_info --username=$admin --key=lastname)
+installDefaultData=1
+installSubmit=1
 
 #=================================================
 # END OF SCRIPT
